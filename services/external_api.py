@@ -12,6 +12,7 @@ class SendPulse():
     def __init__(self):
         self.client_id = os.getenv('CLIENT_ID')
         self.client_secret = os.getenv('CLIENT_SECRET')
+        self.bot_id = os.getenv('BOT_ID')
         
 
     def criar_token(self):
@@ -57,7 +58,7 @@ class SendPulse():
         url = 'https://api.sendpulse.com/whatsapp/contacts/sendByPhone'
 
         params = {
-            'bot_id': '68f76df5e170f893bc0cdf3c',
+            'bot_id': self.bot_id,
             'phone': telefone,
             'message': {
                 'type': 'text',
