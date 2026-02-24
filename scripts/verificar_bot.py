@@ -17,14 +17,14 @@ def listar_registros_no_bot():
         dez_minutos_atras = agora - timedelta(minutes=10)
         for i, registro in enumerate(registros):
             if registro.quantidade_tentativas >= 2:
-                registro.esta_no_bot = False
-                db.session.commit()
-                sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[2])
+                registro.delete()
+                contact_id = sendpulse.obter_contact_id(registro.telefone)
+                sendpulse.acionar_fluxo(registro.telefone, contact_id)
                 print(f'Enviado menssagem para {registro.telefone}')
                 continue
             if registro.criado_em < dez_minutos_atras and (agora.hour > 7 and agora.hour < 19):
                 try:
-                    sendpulse.enviar_mensagem_whatsapp(registro.telefone, 'Oi, você ainda está aí?')
+                    sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[1])
                     print(f'Enviado menssagem para {registro.telefone}')
                     registro.quantidade_tentativas += 1
                     db.session.commit()

@@ -14,12 +14,17 @@ def registro_create():
         return jsonify({'message': 'Nenhuma informação recebida!'})
     dados = data[0].get('contact')
     telefone = dados.get('phone')
+    # verificando se o registro já existe
+    registro = Registro.query.filter(Registro.telefone == telefone).first()
     criado_em = datetime.now()
-    novo_registro = Registro(
-        telefone=telefone,
-        criado_em=criado_em,
-    )
-    db.session.add(novo_registro)
+    if not registro:
+        novo_registro = Registro(
+            telefone=telefone,
+            criado_em=criado_em,
+        )
+        db.session.add(novo_registro)
+    else:
+        registro.criado_em = criado_em
     db.session.commit()
     return jsonify({'message': 'Dados recebidos com sucesso!'})
 

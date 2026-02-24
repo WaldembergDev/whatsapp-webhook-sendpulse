@@ -117,8 +117,8 @@ class SendPulse():
         url = 'https://api.sendpulse.com/whatsapp/flows/run'
 
         payload = {
-            'contact_id': contact_id,
-            'flow_id': flow_id
+            'flow_id': flow_id,
+            'contact_id': contact_id
         }
 
         headers = {
@@ -132,5 +132,30 @@ class SendPulse():
             response.raise_for_status()
             data = response.json()
             print(data)
+            return 
         except Exception as e:
             print(f'Erro: {e}')
+            return
+    
+    def fechar_chat(self, contact_id: str):
+        url = 'https://api.sendpulse.com/whatsapp/contacts/closeChat'
+
+        payload = {
+            'contact_id': contact_id
+        }
+
+        headers = {
+            'Authorization': f'Bearer {self.obter_token_valido()}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+            print(data)
+            return
+        except Exception as e:
+            print(f'Erro: {e}')
+            return
