@@ -9,9 +9,13 @@ class Registro(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     telefone = db.Column(db.String(16), nullable=False)
+    contact_id = db.Column(db.String(255), nullable=True)
     criado_em = db.Column(db.DateTime, default=datetime.now)
     esta_no_bot = db.Column(db.Boolean, default=True)
     quantidade_tentativas = db.Column(db.Integer, default=0)
+
+    def __str__(self):
+        return self.telefone
 
 
 class Token(db.Model):

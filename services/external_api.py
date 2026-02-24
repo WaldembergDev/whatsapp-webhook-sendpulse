@@ -1,3 +1,4 @@
+from wsgiref import headers
 import requests
 from dotenv import load_dotenv
 import os
@@ -54,6 +55,7 @@ class SendPulse():
         else:
             return token.token
     
+
     def enviar_mensagem_whatsapp(self, telefone: str, message: str):
         url = 'https://api.sendpulse.com/whatsapp/contacts/sendByPhone'
 
@@ -81,4 +83,54 @@ class SendPulse():
             print(data)
         except Exception as e:
             print(f'Erro: {e}')
+    
 
+    def obter_contact_id(self, telefone: str):
+        url = 'https://api.sendpulse.com/whatsapp/contacts/getByPhone'
+
+        params = {
+            'phone': telefone,
+            'bot_id': self.bot_id
+        }
+
+        headers = {
+            'Authorization': f'Bearer {self.obter_token_valido()}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+            if not data:
+                print('Dados vazios')
+                return
+            contact_id = data.get('data').get('id')
+            return contact_id
+        except Exception as e:
+            print(f'Erro: {e}')
+            return 
+    
+
+    def acionar_fluxo(self, flow_id: int, contact_id: str):
+        url = 'https://api.sendpulse.com/whatsapp/flows/run'
+
+        payload = {
+            'contact_id': contact_id,
+            'flow_id': flow_id
+        }
+
+        headers = {
+            'Authorization': f'Bearer {self.obter_token_valido()}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+            print(data)
+        except Exception as e:
+            print(f'Erro: {e}')
