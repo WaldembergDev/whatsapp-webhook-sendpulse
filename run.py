@@ -1,25 +1,20 @@
 from app import create_app
-from flask_apscheduler import APScheduler
 from scripts.verificar_bot import listar_registros_no_bot
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 
 app = create_app()
 
 # configuração do Agendador
-class Config:
-    SCHEDULER_API_ENABLED = True
+scheduler = BackgroundScheduler()
 
-app.config.from_object(Config())
-scheduler = APScheduler()
-scheduler.init_app(app)
+# configuração da tarefa
+scheduler.add_job(func=listar_registros_no_bot, trigger='interval', minutes=2)
 scheduler.start()
 
-# função que será executada a cada 10 min
-@scheduler.task('interval', id='do_job_1', minutes=2, misfire_grace_time=900)
-def job1():
-    with app.app_context():
-        print('Iniciando a tarefa')
-        listar_registros_no_bot()
+# garante que o agendador pare quando o app for fechado
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     app.run(debug=False)
