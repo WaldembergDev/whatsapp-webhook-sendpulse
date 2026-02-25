@@ -8,6 +8,8 @@ LISTA_MENSAGENS = ['Ainda por aí? Só passando para saber se podemos continuar.
                    'Olá! Gostaria de saber se ainda tem interesse em prosseguir com o atendimento.',
                    'Conversa finalizada. Se precisar de algo novo, estarei por aqui!']
 
+ID_FLUXO = '68f7e4ec6b69d546bd0e734a'
+
 def listar_registros_no_bot():
     with create_app().app_context():
         # instância do sendpulse
@@ -17,7 +19,7 @@ def listar_registros_no_bot():
         dez_minutos_atras = agora - timedelta(minutes=10)
         for i, registro in enumerate(registros):
             if registro.quantidade_tentativas >= 2:
-                sendpulse.acionar_fluxo('68f7e4ec6b69d546bd0e734a', registro.contact_id)
+                sendpulse.acionar_fluxo(ID_FLUXO, registro.contact_id)
                 print(f'Enviado menssagem para {registro.telefone}')
                 db.session.delete(registro)
                 db.session.commit()
