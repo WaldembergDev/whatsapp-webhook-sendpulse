@@ -2,13 +2,22 @@ from flask import request, jsonify, Blueprint
 from .models import Registro
 from datetime import datetime
 from .models import db
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 main = Blueprint('main', __name__)
 
 # rotas
 @main.route('/criar-registro/', methods=['POST'])
 def registro_create():
+    # obtendo o token do sendpulse
+    token = request.args.get('token')
+    if token != os.getenv('TOKEN_SENDPULSE'):
+        return jsonify({'message': 'Acesso não permitido!'}), 401
+    
+    # obtendo os dados do sendpulse
     data = request.json
     if not data:
         return jsonify({'message': 'Nenhuma informação recebida!'})
@@ -32,6 +41,11 @@ def registro_create():
 
 @main.route('/atualizar-registro/', methods=['POST'])
 def registro_update():
+    # verificando o token do sendpulse
+    token = request.args.get('token')
+    if token != os.getenv('TOKEN_SENDPULSE'):
+        return jsonify({'message': 'Acesso não permitido!'}), 401
+    # obtendo os dados do sendpulse
     data = request.json
     if not data:
         return jsonify({'message': 'Não obtive informações do sistema!'})
