@@ -33,6 +33,7 @@ def registro_create():
         )
         db.session.add(novo_registro)
     else:
+        registro.esta_no_bot = True
         registro.criado_em = criado_em
     db.session.commit()
     print('Registro')
