@@ -26,6 +26,7 @@ def registro_create():
     else:
         registro.criado_em = criado_em
     db.session.commit()
+    print('Registro')
     return jsonify({'message': 'Dados recebidos com sucesso!'})
 
 
