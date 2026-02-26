@@ -32,10 +32,7 @@ def listar_registros_no_bot():
             # verificando se está entre 07 e 19h
             elif registro.criado_em < dez_minutos_atras and (agora.hour >= 7 and agora.hour <= 19):
                 try:
-                    if registro.quantidade_tentativas == 0:
-                        sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[1])
-                    else:
-                        sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[0])
+                    sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[i])
                     print(f'Enviado menssagem para {registro.telefone}')
                     registro.quantidade_tentativas += 1
                     registro.contact_id = sendpulse.obter_contact_id(registro.telefone)
