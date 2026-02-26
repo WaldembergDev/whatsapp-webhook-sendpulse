@@ -18,11 +18,18 @@ def listar_registros_no_bot():
         agora = datetime.now()
         dez_minutos_atras = agora - timedelta(minutes=10)
         for i, registro in enumerate(registros):
-            if registro.quantidade_tentativas >= 2:
+            # verificando se o telefone está atribuido a alguém
+            atribuido = sendpulse.obter_atribuicao(int(registro.telefone))
+            if atribuido:
+                db.session.delete(registro)
+                db.session.commit()
+            # verificando se houve duas ou mais mensagens enviadas ao usuário
+            elif registro.quantidade_tentativas >= 2:
                 sendpulse.acionar_fluxo(ID_FLUXO, registro.contact_id)
                 print(f'Enviado menssagem para {registro.telefone}')
                 db.session.delete(registro)
                 db.session.commit()
+            # verificando se está entre 07 e 19h
             elif registro.criado_em < dez_minutos_atras and (agora.hour >= 7 and agora.hour <= 19):
                 try:
                     if registro.quantidade_tentativas == 0:
