@@ -5,6 +5,7 @@ import os
 from app.models import Token
 from datetime import datetime, timedelta
 from app.models import db
+from pprint import pprint
 
 
 load_dotenv()
@@ -156,6 +157,62 @@ class SendPulse():
             data = response.json()
             print(data)
             return
+        except Exception as e:
+            print(f'Erro: {e}')
+            return
+    
+
+    def obter_atribuicao(self, telefone: int):
+        url = 'https://api.sendpulse.com/whatsapp/chats'
+
+        params = {
+            'bot_id': self.bot_id
+        }
+
+        headers = {
+            'Authorization': f'Bearer {self.obter_token_valido()}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.get(url, params=params, headers=headers)
+
+        atribuido = False
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+            for valor in data.get('data'):
+                telefone_encontrado = valor.get('contact').get('channel_data').get('phone')
+                if telefone_encontrado == telefone:
+                    atribuicao = valor.get('contact').get('operator')
+                    if not atribuicao is None:
+                        atribuido = True
+                    return atribuido
+            return atribuido
+        except Exception as e:
+            print(f'Erro: {e}')
+            return 
+        
+    
+    def definir_nome(self, contact_id: str, name: str):
+        url = 'https://api.sendpulse.com/whatsapp/contacts/setName'
+
+        payload = {
+            'contact_id': contact_id,
+            'name': name
+        }
+
+        headers = {
+            'Authorization': f'Bearer {self.obter_token_valido()}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        try:
+            response.raise_for_status()
+            data = response.json()
+            return data
         except Exception as e:
             print(f'Erro: {e}')
             return
