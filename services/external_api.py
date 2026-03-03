@@ -191,7 +191,7 @@ class SendPulse():
             return atribuido
         except Exception as e:
             print(f'Erro: {e}')
-            return 
+            return False
         
     
     def definir_nome(self, contact_id: str, name: str):

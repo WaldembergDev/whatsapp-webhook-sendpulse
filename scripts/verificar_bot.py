@@ -16,7 +16,7 @@ def listar_registros_no_bot():
         sendpulse = SendPulse()
         registros = Registro.query.filter(Registro.esta_no_bot == True).all()
         agora = datetime.now()
-        dez_minutos_atras = agora - timedelta(minutes=10)
+        quinze_minutos_atras = agora - timedelta(minutes=15)
         for i, registro in enumerate(registros):
             # verificando se o telefone está atribuido a alguém
             atribuido = sendpulse.obter_atribuicao(int(registro.telefone))
@@ -30,7 +30,7 @@ def listar_registros_no_bot():
                 db.session.delete(registro)
                 db.session.commit()
             # verificando se está entre 07 e 19h
-            elif registro.criado_em < dez_minutos_atras and (agora.hour >= 7 and agora.hour <= 19):
+            elif registro.criado_em < quinze_minutos_atras and (agora.hour >= 7 and agora.hour <= 19):
                 try:
                     sendpulse.enviar_mensagem_whatsapp(registro.telefone, LISTA_MENSAGENS[i])
                     print(f'Enviado menssagem para {registro.telefone}')

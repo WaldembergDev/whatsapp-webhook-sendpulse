@@ -12,3 +12,6 @@ wheels/
 # banco de dados sqlite
 *.db
 
+# env
+.env
+

@@ -10,7 +10,7 @@ app = create_app()
 scheduler = BackgroundScheduler()
 
 # configuração da tarefa
-scheduler.add_job(func=listar_registros_no_bot, trigger='interval', minutes=10)
+scheduler.add_job(func=listar_registros_no_bot, trigger='interval', minutes=15, misfire_grace_time=900)
 scheduler.start()
 
 # garante que o agendador pare quando o app for fechado

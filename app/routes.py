@@ -54,5 +54,6 @@ def registro_update():
     telefone = dados.get('phone')
     registro = Registro.query.filter(Registro.telefone==telefone).first()
     registro.esta_no_bot = False
+    registro.quantidade = 0
     db.session.commit()
     return jsonify({'message': 'Dados atualizados com sucesso!'})
