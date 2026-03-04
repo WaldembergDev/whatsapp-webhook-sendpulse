@@ -17,6 +17,6 @@ scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(host='0.0.0.0', port=5000)
 
 # após 15 min fazer uma pergunta se ele deseja continuar ou encerrar o atendimento
