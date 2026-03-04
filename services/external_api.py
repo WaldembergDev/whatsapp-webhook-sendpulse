@@ -33,7 +33,7 @@ class SendPulse():
             data = response.json()
             token = Token(
                 token=data.get('access_token'),
-                expira_em=datetime.now() + timedelta(seconds=3600)
+                expira_em=datetime.now() + timedelta(seconds=3300)
             )
             db.session.add(token)
             db.session.commit()
