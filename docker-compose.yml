@@ -1,0 +1,12 @@
+services:
+  webhook-sendpulse:
+    build: .
+    container_name: whatsapp_webhook
+    restart: always
+    ports:
+      - "80:5000"  # Mapeia a porta 80 da VPS para a 5000 do Flask
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
+    volumes:
+      - .:/app
